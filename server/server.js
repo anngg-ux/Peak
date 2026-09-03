@@ -1,9 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-require("dotenv").config();
+const dotenv = require("dotenv");
 
-const authRoutes = require("./routes/authRoutes");
+const connectDB = require("./config/db");
+
+dotenv.config();
 
 const app = express();
 
@@ -20,15 +22,12 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("MongoDB connected");
+const startServer = async () => {
+    await connectDB();
 
     app.listen(PORT, () => {
-      console.log(`Peak server running on port ${PORT}`);
+        console.log(`Server running on http://localhost:${PORT}`);
     });
-  })
-  .catch((error) => {
-    console.error("MongoDB connection failed:", error);
-  });
+};
+
+startServer();
